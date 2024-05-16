@@ -21,14 +21,22 @@ const bodyParser = require("body-parser");
 // import validateBook
 const validateBook = require("./middlewares/validateBook");
 
+// import express.static middleware
+const staticMiddleware = express.static("public");  // path to the public folder
+
 // include body-parser middleware to handle JSON data from the request body
 app.use(bodyParser.json());   // to parse incoming JSON requests
 app.use(bodyParser.urlencoded({ extended: true })); // for form data handling
 
+// mount the imported staticMiddleware wiht the path to the public folder
+app.use(staticMiddleware); // mount the static middleware
 /*
-app.get("/books", booksController.getAllBooks);
-app.get("/books/:id", booksController.getBookById); 
-*/
+by mounting staticMiddleware using app.use, u can configure Express to serve static 
+files from the public directory.
+When a user request a URL that maps to a file within the public folder (e.g, indeex.html),
+Express locates the file and sends it directly to the browser, which simplifies yr code
+by offloading the responsibility of serving static content to Express.
+*/ 
 
 app.post("/books", validateBook, booksController.createBook);  // POST for creating books (can handle JSON data)
 app.put("/books/:id", booksController.updateBook);  // PUT for updating books
