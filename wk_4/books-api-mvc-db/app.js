@@ -3,17 +3,8 @@ const express = require("express");
 const sql = require("mssql");
 const dbConfig = require("./dbConfig");
 
-const app = express();
-const port = process.env.PORT || 3000; // use environmental variable or default value
-
 // integrate the controllers n define routes 
 const booksController = require("./controllers/booksController");
-
-
-// routes for GET requests 
-// import booksController module
-app.get("/books", booksController.getAllBooks);       // route maps to the getAllBooks function in the booksController, upon receiving this GET request,controller function retrieves all book records
-app.get("/books/:id", booksController.getBookById);   // route w a dynamic parameter ":id" maps to the getBookById function, controller func will extract ID from the request parameter n use it to retrieve corresponding book record
 
 // import body-parser
 const bodyParser = require("body-parser"); 
@@ -24,12 +15,21 @@ const validateBook = require("./middlewares/validateBook");
 // import express.static middleware
 const staticMiddleware = express.static("public");  // path to the public folder
 
+const app = express();
+const port = 3000; // use environmental variable or default value
+
 // include body-parser middleware to handle JSON data from the request body
 app.use(bodyParser.json());   // to parse incoming JSON requests
 app.use(bodyParser.urlencoded({ extended: true })); // for form data handling
 
+// routes for GET requests 
+// import booksController module
+app.get("/books", booksController.getAllBooks);       // route maps to the getAllBooks function in the booksController, upon receiving this GET request,controller function retrieves all book records
+app.get("/books/:id", booksController.getBookById);   // route w a dynamic parameter ":id" maps to the getBookById function, controller func will extract ID from the request parameter n use it to retrieve corresponding book record
+
 // mount the imported staticMiddleware wiht the path to the public folder
 app.use(staticMiddleware); // mount the static middleware
+
 /*
 by mounting staticMiddleware using app.use, u can configure Express to serve static 
 files from the public directory.
